@@ -18,9 +18,12 @@ class Generator(object):
         X = []
         for i in range(steps, 0, -1):
             if target_frame - i > 0:
-                X.append(np.load('tmp/frames/{}.npy'.format(target_frame - i)))
+                X.append(np.load('tmp/frames/{}.npy'.format(target_frame - i)).flatten())
 
-        X = np.array(X)
-        y = np.load('tmp/frames/{}.npy'.format(target_frame))
+        X = np.array(X) / 255.0
+        y = np.load('tmp/frames/{}.npy'.format(target_frame)).flatten() / 255.0
+
+        print(X.shape)
+        print(y.shape)
 
         return (X, y)
