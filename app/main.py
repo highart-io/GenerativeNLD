@@ -11,6 +11,8 @@ import numpy as np
 import cv2
 import requests
 
+from .data.generator import Generator
+
 
 def main():
 
@@ -40,7 +42,6 @@ def main():
                     f.write(res.content)
     
         files = os.listdir('tmp/')
-        print(files)
 
         vid = cv2.VideoCapture('tmp/{}'.format(files[0]))
 
@@ -48,14 +49,21 @@ def main():
         while vid.isOpened():
 
             success, image = vid.read()
-            image = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+            if success:
 
-            np.save('tmp/frames/{}.npy'.format(frame), image)
+                image = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+                np.save('tmp/frames/{}.npy'.format(frame), image)
 
-            frame += 1
-            print(frame)
+                frame += 1
+                print(frame)
+
+            else:
+                break
 
         vid.release()
+
+    generator = Generator(dims = (10, 10))
+    generator()
     
     exit(0)
 
