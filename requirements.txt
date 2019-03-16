@@ -1,5 +1,7 @@
 numpy
 opencv-python
+imageio
+imageio-ffmpeg
 requests
 keras
 tensorflow

@@ -18,12 +18,14 @@ def init():
         print('Creating Directory')
         os.mkdir('tmp/')
         os.mkdir('tmp/frames')
+        os.mkdir('gifs')
 
     else:
         print('Deleting Directory')
         shutil.rmtree('tmp/')
         os.mkdir('tmp/')
         os.mkdir('tmp/frames')
+        os.mkdir('gifs')
 
     with open('sources/films.txt', 'r') as films:
 
@@ -51,7 +53,6 @@ def init():
             np.save('tmp/frames/{}.npy'.format(frame), image)
 
             frame += 1
-            print(frame)
 
         else:
             break

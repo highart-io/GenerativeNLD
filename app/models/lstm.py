@@ -12,14 +12,8 @@ def LSTM(input_shape, output_dim):
     img_input = keras.layers.Input(input_shape)
 
     x = keras.layers.LSTM(
-            units = 128,
-            return_sequences = True)(img_input)
+            units = 128)(img_input)
 
-    x = keras.layers.Dropout(.5)(x)
-    
-    x = keras.layers.LSTM(
-            units = 128)(x)
-    
     x = keras.layers.Dropout(.5)(x)
 
     target_img = keras.layers.Dense(

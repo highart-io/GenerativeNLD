@@ -10,11 +10,13 @@ import numpy as np
 
 from .data.generator import Generator
 from .utils.init import init
+from .utils.make_gif import make_gif
 from .models.lstm import LSTM
 
 
-steps = 4
+steps = 12
 batch_size = 32
+gif_cadence = 100
 
 def main():
 
@@ -27,18 +29,22 @@ def main():
     
     model = LSTM(input_shape, output_dim)
     generator = Generator(dims = dims, steps = steps)
-
-    iteration = 0
-    while True:
+    
+    make_gif(name = 'epoch_0', starting_frame = 10000, frames = 60, dims = dims, model = model, generator = generator, fps = 6)
+    
+    epochs = 0
+    while epochs < 1000:
         
-        batch = [generator() for i in range(batch_size)]
-        X, y = np.array([x[0] for x in batch]), np.array([y[1] for y in batch])
+        model.fit_generator(
+                generator = generator,
+                use_multiprocessing = True
+                )
 
-        loss = model.train_on_batch(X, y)
+        epochs += 1
+        if epochs % gif_cadence == 0:
+            make_gif(name = 'epoch_{}'.format(epochs), starting_frame = 10000, frames = 60, dims = dims, model = model, generator = generator, fps = 6)
 
-        iteration += 1
-
-        print('Iteration : {} | Loss : {}'.format(iteration, loss))
+    exit(0)
 
     return
 if __name__ == '__main__':
