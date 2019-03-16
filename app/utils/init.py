@@ -8,6 +8,7 @@ import os
 import shutil
 
 import numpy as np
+import imageio
 import cv2
 import requests
 
@@ -17,15 +18,18 @@ def init():
     if not os.path.exists('tmp/'):
         print('Creating Directory')
         os.mkdir('tmp/')
+        os.mkdir('gifs/')
+        os.mkdir('tmp/films')
         os.mkdir('tmp/frames')
-        os.mkdir('gifs')
 
     else:
         print('Deleting Directory')
         shutil.rmtree('tmp/')
+        shutil.rmtree('gifs/')
         os.mkdir('tmp/')
+        os.mkdir('gifs/')
+        os.mkdir('tmp/films')
         os.mkdir('tmp/frames')
-        os.mkdir('gifs')
 
     with open('sources/films.txt', 'r') as films:
 
@@ -35,28 +39,25 @@ def init():
             print('Downloading : {}'.format(line.split('/')[-1]))
             res = requests.get(line)
 
-            with open('tmp/{}'.format(line.split('/')[-1]), 'wb') as f:
+            with open('tmp/films/{}'.format(line.split('/')[-1]), 'wb') as f:
                 print('Writing : {}'.format(line.split('/')[-1]))
                 f.write(res.content)
 
-    files = os.listdir('tmp/')
+    files = os.listdir('tmp/films/')
 
-    vid = cv2.VideoCapture('tmp/{}'.format(files[0]))
+    with imageio.get_reader('tmp/films/{}'.format(files[0]), 'ffmpeg') as vid:
 
-    frame = 0
-    while vid.isOpened():
+        frame = 0
+        while True:
 
-        success, image = vid.read()
-        if success:
+            try:
+                image = vid.get_data(frame)
+            except:
+                break
 
             image = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
             np.save('tmp/frames/{}.npy'.format(frame), image)
 
             frame += 1
-
-        else:
-            break
-
-    vid.release()
 
     return

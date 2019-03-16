@@ -4,4 +4,4 @@ imageio
 imageio-ffmpeg
 requests
 keras
-tensorflow
+tensorflow-gpu

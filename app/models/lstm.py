@@ -4,15 +4,21 @@ LSTM
 Author: Christian Lang <me@christianlang.io>
 """
 
-import keras
+from tensorflow import keras
 
 
 def LSTM(input_shape, output_dim):
 
     img_input = keras.layers.Input(input_shape)
 
-    x = keras.layers.LSTM(
-            units = 128)(img_input)
+    x = keras.layers.CuDNNLSTM(
+            units = 128,
+            return_sequences = True)(img_input)
+
+    x = keras.layers.Dropout(.5)(x)
+    
+    x = keras.layers.CuDNNLSTM(
+            units = 128)(x)
 
     x = keras.layers.Dropout(.5)(x)
 
