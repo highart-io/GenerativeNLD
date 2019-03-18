@@ -4,7 +4,7 @@ LSTM
 Author: Christian Lang <me@christianlang.io>
 """
 
-from tensorflow import keras
+import keras
 
 
 def LSTM(input_shape, output_dim):

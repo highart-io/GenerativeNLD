@@ -56,6 +56,7 @@ def init():
                 break
 
             image = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+            image = cv2.resize(image, (image.shape[0] // 4, image.shape[1] // 4))
             np.save('tmp/frames/{}.npy'.format(frame), image)
 
             frame += 1

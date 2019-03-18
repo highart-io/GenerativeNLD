@@ -16,7 +16,7 @@ from .models.lstm import LSTM
 
 steps = 12
 batch_size = 32
-gif_cadence = 100
+gif_cadence = 10
 
 def main():
 
