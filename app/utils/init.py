@@ -11,9 +11,15 @@ import numpy as np
 import imageio
 import cv2
 import requests
+import configparser
 
+
+config = configparser.ConfigParser()
+config.read('config.ini')
 
 def init():
+
+    scaling = int(config['DATA']['SCALING'])
 
     if not os.path.exists('tmp/'):
         print('Creating Directory')
@@ -56,9 +62,10 @@ def init():
                 break
 
             image = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
-            image = cv2.resize(image, (image.shape[0] // 4, image.shape[1] // 4))
+            image = cv2.resize(image, (image.shape[0] // scaling, image.shape[1] // scaling))
             np.save('tmp/frames/{}.npy'.format(frame), image)
 
             frame += 1
+            print(frame)
 
     return
