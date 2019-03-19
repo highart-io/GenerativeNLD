@@ -7,16 +7,22 @@ import sys
 
 import datetime as dt
 import numpy as np
+import imageio
+import os
 
 from .data.generator import Generator
 from .utils.init import init
 from .models.gan import GAN
+import configparser
 
 
-exit(0)
+config = configparser.ConfigParser()
+config.read('config.ini')
 
-latent_dim = 100
-channels = 1
+latent_dim = int(config['TRAINING']['LATENT_DIM'])
+channels = int(config['TRAINING']['CHANNELS'])
+batch_size = int(config['TRAINING']['BATCH_SIZE'])
+inner_loop = int(config['TRAINING']['INNER_LOOP'])
 
 def main():
 
@@ -24,12 +30,53 @@ def main():
         init()
 
     img_shape = np.load('tmp/frames/0.npy').shape
-    print(img_shape)
+    img_shape = (img_shape[0], img_shape[1], channels)
     
-    gan = GAN(img_shape, latent_dim, channels)
-    generator = Generator(dims = img_shape)
+    gan = GAN(img_shape = img_shape, latent_dim = latent_dim, channels = channels)
+    generator = Generator(channels = channels)
 
-    exit(0)
+    y_true, y_false = np.ones((batch_size, 1)), np.zeros((batch_size, 1))
+
+    epochs = 1
+    while True:
+
+        d_loss = []
+        for _ in range(inner_loop):
+
+            X_true = np.array([generator() for _ in range(batch_size)])
+
+            noise = np.random.normal(loc = 0, scale = 1, size = (batch_size, latent_dim))
+            X_false = gan.generate(X = noise)
+
+            d_losses = gan.train_discriminator(X_true, y_true, X_false, y_false)
+            d_l = np.add(d_losses[0], d_losses[1]) * 0.5
+
+            d_loss.append(d_l)
+
+        d_loss = np.array(d_loss).mean(axis = 0)
+        
+        noise = np.random.normal(loc = 0, scale = 1, size = (batch_size, latent_dim))
+
+        g_loss = gan.train_generator(X = noise, y = y_true)
+
+        print('Epochs : {} | Discriminator Loss : {} | Accuracy : {} | Generator Loss : {}'.format(epochs, d_loss[0], d_loss[1], g_loss))
+
+        if (epochs % 10 == 0) or (epochs == 1):
+
+            dirpath = 'imgs/epoch_{}/'.format(epochs)
+            os.mkdir(dirpath)
+
+            noise = np.random.normal(loc = 0, scale = 1, size = (10, latent_dim))
+            gen_images = gan.generate(X = noise)
+
+            gen_images = np.squeeze(np.round((gen_images + 1) * 127.5)).astype(np.uint8)
+
+            for i in range(len(gen_images)):
+                imageio.imwrite(
+                        uri = dirpath + '{}.png'.format(i),
+                        im = gen_images[i])
+        
+        epochs += 1
     
     return
 if __name__ == '__main__':

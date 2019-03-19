@@ -21,19 +21,21 @@ def init():
 
     scaling = int(config['DATA']['SCALING'])
 
-    if not os.path.exists('tmp/'):
+    if not os.path.exists('tmp/') and not os.path.exists('imgs/'):
         print('Creating Directory')
         os.mkdir('tmp/')
-        os.mkdir('gifs/')
+        os.mkdir('imgs/')
         os.mkdir('tmp/films')
         os.mkdir('tmp/frames')
 
     else:
         print('Deleting Directory')
-        shutil.rmtree('tmp/')
-        shutil.rmtree('gifs/')
+        if os.path.exists('tmp/'):
+            shutil.rmtree('tmp/')
+        if os.path.exists('imgs/'):
+            shutil.rmtree('imgs/')
         os.mkdir('tmp/')
-        os.mkdir('gifs/')
+        os.mkdir('imgs/')
         os.mkdir('tmp/films')
         os.mkdir('tmp/frames')
 
@@ -62,10 +64,12 @@ def init():
                 break
 
             image = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
-            image = cv2.resize(image, (image.shape[0] // scaling, image.shape[1] // scaling))
+            image = cv2.resize(image, (image.shape[1] // scaling, image.shape[0] // scaling))
+
             np.save('tmp/frames/{}.npy'.format(frame), image)
 
             frame += 1
-            print(frame)
+            if frame % 10000 == 0:
+                print('Frame : {}'.format(frame))
 
     return
