@@ -1,8 +1,7 @@
 #!/usr/bin/env python3
 """
 Main
-Author: Christian Lang <me@christianlang.io>
-"""
+Author: Christian Lang <me@christianlang.io> """
 import sys
 
 import datetime as dt
@@ -37,7 +36,7 @@ def main():
 
     y_true, y_false = np.ones((batch_size, 1)), np.zeros((batch_size, 1))
 
-    epochs = 1
+    iteration = 1
     while True:
 
         d_loss = []
@@ -59,11 +58,11 @@ def main():
 
         g_loss = gan.train_generator(X = noise, y = y_true)
 
-        print('Epochs : {} | Discriminator Loss : {} | Accuracy : {} | Generator Loss : {}'.format(epochs, d_loss[0], d_loss[1], g_loss))
+        print('Iteration : {} | Discriminator Loss : {} | Accuracy : {} | Generator Loss : {}'.format(iteration, d_loss[0], d_loss[1], g_loss))
 
-        if (epochs % 10 == 0) or (epochs == 1):
+        if (iteration % 10 == 0) or (iteration == 1):
 
-            dirpath = 'imgs/epoch_{}/'.format(epochs)
+            dirpath = 'imgs/iteration_{}/'.format(iteration)
             os.mkdir(dirpath)
 
             noise = np.random.normal(loc = 0, scale = 1, size = (10, latent_dim))
@@ -76,7 +75,7 @@ def main():
                         uri = dirpath + '{}.png'.format(i),
                         im = gen_images[i])
         
-        epochs += 1
+        iteration += 1
     
     return
 if __name__ == '__main__':
