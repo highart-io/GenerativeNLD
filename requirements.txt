@@ -3,3 +3,4 @@ opencv-python
 imageio
 imageio-ffmpeg
 requests
+google-cloud-storage

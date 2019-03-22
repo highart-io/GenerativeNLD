@@ -4,7 +4,8 @@ LSTM
 Author: Christian Lang <me@christianlang.io>
 """
 
-import keras
+from tensorflow import keras
+import tensorflow as tf
 
 
 
@@ -50,23 +51,23 @@ class GAN(object):
 
         model.add(keras.layers.Reshape((x, y, 128)))
 
-        model.add(keras.layers.convolutional.UpSampling2D())
+        model.add(keras.layers.UpSampling2D())
 
-        model.add(keras.layers.convolutional.Conv2D(128, kernel_size=4, padding="same"))
-
-        model.add(keras.layers.BatchNormalization(momentum=0.8))
-
-        model.add(keras.layers.Activation("relu"))
-
-        model.add(keras.layers.convolutional.UpSampling2D())
-
-        model.add(keras.layers.convolutional.Conv2D(64, kernel_size=3, padding = "same"))
+        model.add(keras.layers.Conv2D(128, kernel_size=4, padding="same"))
 
         model.add(keras.layers.BatchNormalization(momentum=0.8))
 
         model.add(keras.layers.Activation("relu"))
 
-        model.add(keras.layers.convolutional.Conv2D(1, kernel_size = 3, padding = "same"))
+        model.add(keras.layers.UpSampling2D())
+
+        model.add(keras.layers.Conv2D(64, kernel_size=3, padding = "same"))
+
+        model.add(keras.layers.BatchNormalization(momentum=0.8))
+
+        model.add(keras.layers.Activation("relu"))
+
+        model.add(keras.layers.Conv2D(1, kernel_size = 3, padding = "same"))
 
         model.add(keras.layers.Activation("tanh"))
 
@@ -79,18 +80,18 @@ class GAN(object):
 
         model = keras.models.Sequential()
 
-        model.add(keras.layers.convolutional.Conv2D(
+        model.add(keras.layers.Conv2D(
             32,
             kernel_size = 3,
             strides = 2,
             input_shape = self.img_shape,
             padding = "same"))
 
-        model.add(keras.layers.advanced_activations.LeakyReLU(alpha=0.2))
+        model.add(keras.layers.LeakyReLU(alpha=0.2))
 
         model.add(keras.layers.Dropout(0.25))
 
-        model.add(keras.layers.convolutional.Conv2D(
+        model.add(keras.layers.Conv2D(
             64,
             kernel_size = 3,
             strides = 2,
@@ -101,11 +102,11 @@ class GAN(object):
 
         model.add(keras.layers.BatchNormalization(momentum = 0.8))
 
-        model.add(keras.layers.advanced_activations.LeakyReLU(alpha = 0.2))
+        model.add(keras.layers.LeakyReLU(alpha = 0.2))
 
         model.add(keras.layers.Dropout(0.25))
 
-        model.add(keras.layers.convolutional.Conv2D(
+        model.add(keras.layers.Conv2D(
             128,
             kernel_size = 3,
             strides = 2,
@@ -113,11 +114,11 @@ class GAN(object):
 
         model.add(keras.layers.BatchNormalization(momentum = 0.8))
 
-        model.add(keras.layers.advanced_activations.LeakyReLU(alpha = 0.2))
+        model.add(keras.layers.LeakyReLU(alpha = 0.2))
 
         model.add(keras.layers.Dropout(0.25))
 
-        model.add(keras.layers.convolutional.Conv2D(
+        model.add(keras.layers.Conv2D(
             256,
             kernel_size = 3,
             strides = 1,
@@ -125,7 +126,7 @@ class GAN(object):
 
         model.add(keras.layers.BatchNormalization(momentum = 0.8))
 
-        model.add(keras.layers.advanced_activations.LeakyReLU(alpha = 0.2))
+        model.add(keras.layers.LeakyReLU(alpha = 0.2))
 
         model.add(keras.layers.Dropout(0.25))
 

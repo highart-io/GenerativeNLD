@@ -3,7 +3,7 @@
 import os
 
 import numpy as np
-import keras
+from tensorflow import keras
 
 
 class Generator(keras.utils.Sequence):

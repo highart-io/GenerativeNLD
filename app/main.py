@@ -58,7 +58,12 @@ def main():
 
         g_loss = gan.train_generator(X = noise, y = y_true)
 
-        print('Iteration : {} | Discriminator Loss : {} | Accuracy : {} | Generator Loss : {}'.format(iteration, d_loss[0], d_loss[1], g_loss))
+        print('Iteration : {}\nDiscriminator Loss : {}\nAccuracy : {}\nGenerator Loss : {}\n{}'.format(
+            iteration,
+            d_loss[0],
+            d_loss[1],
+            g_loss,
+            '-'*36))
 
         if (iteration % 10 == 0) or (iteration == 1):
 
